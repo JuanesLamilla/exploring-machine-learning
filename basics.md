@@ -8,10 +8,24 @@ output:
     highlight: github
     keep_md: true
 ---
+## Setup
 
+```r
+knitr::opts_chunk$set(echo = TRUE)
 
+# Required Packages
+library(tidyverse)
+library(caret)
+library(dslabs)
+data(heights)
 
-## Predicting Sex based on Height
+# Setting the seed
+set.seed(2, sample.kind = "Rounding")
+```
+
+# Basics of Evaluating Machine Learning Algorithms
+
+### Predicting Sex based on Height
 
 
 ```r
@@ -75,4 +89,56 @@ accuracy <- map_dbl(cutoff, function(x){
     factor(levels = levels(test_set$sex))
   mean(y_hat == train_set$sex)
 })
+
+# and now plot the accuracy
+data.frame(cutoff, accuracy) %>% 
+  ggplot(aes(cutoff, accuracy)) + 
+  geom_point() + 
+  geom_line() 
 ```
+
+![](basics_files/figure-html/VaryingCutoffs-1.png)<!-- -->
+
+```r
+max(accuracy)
+```
+
+```
+## [1] 0.8361905
+```
+
+```r
+# the max accuracy has the cutoff value of:
+best_cutoff <- cutoff[which.max(accuracy)]
+best_cutoff
+```
+
+```
+## [1] 64
+```
+
+
+We can see the max accuracy value is 0.836 (with a cutoff value of 64 inches), much higher than the 50% we were getting from guessing.
+
+Finally we can test this cutoff on the test set to make sure the accuracy is not overly optimistic, and the accuracy is not caused by overfitting.
+
+
+```r
+y_hat <- ifelse(test_set$height > best_cutoff, "Male", "Female") %>% 
+  factor(levels = levels(test_set$sex))
+y_hat <- factor(y_hat)
+mean(y_hat == test_set$sex)
+```
+
+```
+## [1] 0.8171429
+```
+
+
+
+
+
+
+
+
+

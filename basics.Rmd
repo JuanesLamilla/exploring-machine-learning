@@ -8,8 +8,8 @@ output:
     highlight: github
     keep_md: true
 ---
-
-```{r setup, include=FALSE}
+## Setup
+```{r setup, results = FALSE, warning=FALSE, message=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 # Required Packages
@@ -22,7 +22,9 @@ data(heights)
 set.seed(2, sample.kind = "Rounding")
 ```
 
-## Predicting Sex based on Height
+# Basics of Evaluating Machine Learning Algorithms
+
+### Predicting Sex based on Height
 
 ```{r MLSetup}
 # Defining outcomes and predictors
